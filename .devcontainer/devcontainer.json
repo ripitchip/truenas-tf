@@ -1,0 +1,22 @@
+{
+  "name": "TrueNAS Ubuntu VM (OpenTofu)",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "hashicorp.terraform"
+      ]
+    }
+  },
+  "remoteUser": "vscode",
+  // Host private key (its public half is the one set in secret.auto.tfvars and
+  // already authorized on root@<truenas_host>). Without this mount the
+  // container has no private key and SSH to TrueNAS fails with
+  // "Permission denied (publickey)".
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh/id_rsa,target=/home/vscode/.ssh/id_rsa,type=bind,consistency=cached"
+  ],
+  "postCreateCommand": "bash .devcontainer/post-create.sh"
+}
